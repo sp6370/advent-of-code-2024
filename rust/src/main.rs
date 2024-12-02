@@ -1,42 +1,26 @@
-use std::env;
-use std::process;
+use std::fs::read_to_string;
 
-mod solutions {
-    // Import day modules
-    pub mod day01;
+fn day01() {
+    println!("Current working directory: {}", std::env::current_dir().unwrap().display());
+    
+    let mut list_a: Vec<i32> = Vec::new();
+    let mut list_b: Vec<i32> = Vec::new();
+
+    for line in read_to_string("src/inputs/day01.txt").unwrap().lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() >= 2 {
+            if let (Ok(val_a), Ok(val_b)) = (
+                parts[0].parse(), parts[1].parse()
+            ) {
+                list_a.push(val_a);
+                list_b.push(val_b);
+            } else {
+                eprintln!("Error parsing line: {}", line);
+            }
+        }
+    }
 }
 
 fn main() {
-    // Get command-line arguments
-    let args: Vec<String> = env::args().collect();
-
-    // Check if a day is specified
-    if args.len() < 2 {
-        eprintln!("Please specify a day (e.g., cargo run -- 1)");
-        process::exit(1);
-    }
-
-    // Parse the day number
-    let day: u32 = match args[1].parse() {
-        Ok(num) => num,
-        Err(_) => {
-            eprintln!("Invalid day number");
-            process::exit(1);
-        }
-    };
-
-    // Run the appropriate day's solution
-    match day {
-        1 => {
-            if let Err(e) = solutions::day01::solve() {
-                eprintln!("Error: {}", e);
-                process::exit(1);
-            }
-        },
-        // Add more days as you implement them
-        _ => {
-            eprintln!("Day {} not implemented", day);
-            process::exit(1);
-        }
-    }
+    day01();
 }
